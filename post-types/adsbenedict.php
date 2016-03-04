@@ -53,8 +53,23 @@ function adsbenedict_save_ad_url( $post_id ) {
 		
 		// Update the meta field in the database.
 		update_post_meta( $post_id, 'adsbenedict_url', $my_data );
+		
+		//change the title
+		remove_action( 'save_post', 'adsbenedict_save_ad_url', 1);
+		
+		if ( get_post_type($post_id)=='adsbenedict'){
+			$advertiser=wp_get_post_terms($post_id,'advertisers');
+			$zone=wp_get_post_terms($post_id,'zone');
+			var_dump($advertiser);
+			$advertiser=$advertiser[0]->name;
+			$zone=$zone[0]->name;
+			$title="$advertiser in $zone";
+			wp_update_post( array( 'ID' => $post_id, 'post_title' => $title ) );
+		}
+		add_action( 'save_post', 'adsbenedict_save_ad_url', 1);
+		
 }
-add_action( 'save_post' , 'adsbenedict_save_ad_url');
+add_action( 'save_post' , 'adsbenedict_save_ad_url', 1);
 
 function adsbenedict_init() {
 	register_post_type( 'adsbenedict', array(

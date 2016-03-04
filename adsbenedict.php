@@ -33,13 +33,16 @@ function adsbenedict_shortcode($attr) {
 				'fields' => 'ids',
 			);
 			$adids=new WP_Query($args);
-			shuffle($adids->posts);
+			if (count($adids->posts)<1) {
+				return;
+			} else {
+				shuffle($adids->posts);
 			
-			$url=get_post_meta($adids->posts[0],'adsbenedict_url',true);
-			echo "<a href=$url>";
-			echo get_the_post_thumbnail($adids->posts[0],'full');
-			echo "</a>";
-			
+				$url=get_post_meta($adids->posts[0],'adsbenedict_url',true);
+				echo "<a href=$url>";
+				echo get_the_post_thumbnail($adids->posts[0],'full');
+				echo "</a>";
+			}
 		}
 	}
 	
