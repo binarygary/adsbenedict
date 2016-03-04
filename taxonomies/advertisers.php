@@ -1,7 +1,7 @@
 <?php
 
 function advertisers_init() {
-	register_taxonomy( 'advertisers', array( 'post' ), array(
+	register_taxonomy( 'advertisers', array( 'adsbenedict' ), array(
 		'hierarchical'      => false,
 		'public'            => true,
 		'show_in_nav_menus' => true,

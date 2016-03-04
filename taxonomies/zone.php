@@ -3,12 +3,12 @@
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 function zone_init() {
-	register_taxonomy( 'zone', array( 'post' ), array(
+	register_taxonomy( 'zone', array( 'adsbenedict' ), array(
 		'hierarchical'      => false,
-		'public'            => true,
-		'show_in_nav_menus' => true,
+		'public'            => false,
+		'show_in_nav_menus' => false,
 		'show_ui'           => true,
-		'show_admin_column' => false,
+		'show_admin_column' => true,
 		'query_var'         => true,
 		'rewrite'           => true,
 		'capabilities'      => array(
