@@ -1,31 +1,33 @@
 <?php
 
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+
 function adsbenedict_init() {
 	register_post_type( 'adsbenedict', array(
 		'labels'            => array(
-			'name'                => __( 'Adsbenedicts', 'adsbenedict' ),
-			'singular_name'       => __( 'Adsbenedict', 'adsbenedict' ),
-			'all_items'           => __( 'Adsbenedicts', 'adsbenedict' ),
-			'new_item'            => __( 'New adsbenedict', 'adsbenedict' ),
+			'name'                => __( 'Ads Benedict', 'adsbenedict' ),
+			'singular_name'       => __( 'Ad', 'adsbenedict' ),
+			'all_items'           => __( 'Ads', 'adsbenedict' ),
+			'new_item'            => __( 'New ad', 'adsbenedict' ),
 			'add_new'             => __( 'Add New', 'adsbenedict' ),
-			'add_new_item'        => __( 'Add New adsbenedict', 'adsbenedict' ),
-			'edit_item'           => __( 'Edit adsbenedict', 'adsbenedict' ),
-			'view_item'           => __( 'View adsbenedict', 'adsbenedict' ),
-			'search_items'        => __( 'Search adsbenedicts', 'adsbenedict' ),
-			'not_found'           => __( 'No adsbenedicts found', 'adsbenedict' ),
-			'not_found_in_trash'  => __( 'No adsbenedicts found in trash', 'adsbenedict' ),
+			'add_new_item'        => __( 'Add New ad', 'adsbenedict' ),
+			'edit_item'           => __( 'Edit ad', 'adsbenedict' ),
+			'view_item'           => __( 'View ad', 'adsbenedict' ),
+			'search_items'        => __( 'Search ads', 'adsbenedict' ),
+			'not_found'           => __( 'No ads found', 'adsbenedict' ),
+			'not_found_in_trash'  => __( 'No ads found in trash', 'adsbenedict' ),
 			'parent_item_colon'   => __( 'Parent adsbenedict', 'adsbenedict' ),
-			'menu_name'           => __( 'Adsbenedicts', 'adsbenedict' ),
+			'menu_name'           => __( 'Ads Benedict', 'adsbenedict' ),
 		),
 		'public'            => true,
 		'hierarchical'      => false,
 		'show_ui'           => true,
 		'show_in_nav_menus' => true,
-		'supports'          => array( 'title', 'editor' ),
+		'supports'          => array( 'thumbnail', 'link' ),
 		'has_archive'       => true,
 		'rewrite'           => true,
 		'query_var'         => true,
-		'menu_icon'         => 'dashicons-admin-post',
+		'menu_icon'         => 'dashicons-megaphone',
 	) );
 
 }

@@ -1,5 +1,7 @@
 <?php
 
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+
 function zone_init() {
 	register_taxonomy( 'zone', array( 'post' ), array(
 		'hierarchical'      => false,

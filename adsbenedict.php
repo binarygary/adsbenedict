@@ -10,3 +10,7 @@ Text Domain: adsbenedict
 Domain Path: /languages
 */
 
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+
+require('post-types/adsbenedict.php');
+require('taxonomies/zone.php');
