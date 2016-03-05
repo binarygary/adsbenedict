@@ -127,3 +127,24 @@ function adsbenedict_updated_messages( $messages ) {
 	return $messages;
 }
 add_filter( 'post_updated_messages', 'adsbenedict_updated_messages' );
+
+
+add_filter('manage_posts_columns', 'adsbenedict_show_thumb');
+function adsbenedict_show_thumb($columns) {
+    $columns['thumb'] = 'Thumb';
+    return $columns;
+}
+
+add_image_size( 'admin-list-thumb', 160, 160, false );
+
+add_filter('manage_posts_custom_column', 'adsbenedict_show_thumb_display');
+function adsbenedict_show_thumb_display($name) {
+    global $post;
+	switch($name) {
+		case 'thumb':
+			echo '<a href="' . get_edit_post_link() . '">';
+		    echo the_post_thumbnail( 'admin-list-thumb' );
+		    echo '</a>';
+		    break;
+	}
+}
