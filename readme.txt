@@ -1,114 +1,112 @@
-=== Adsbenedict ===
-Contributors: (this should be a list of wordpress.org userid's)
-Donate link: http://example.com/
-Tags: comments, spam
-Requires at least: 3.0.1
-Tested up to: 3.4
-Stable tag: 4.3
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+=== Ads Benedict ===
+Contributors: binarygary
+Tags: banner ads, easy ads, double click for publishers, ad network
+Stable Tag: 0.3.0
+Requires at least: 4.0
+Tested up to: 4.5
+License: GPLv3 or later
+License URI: https://www.gnu.org/licenses/gpl.html
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+This is a super basic banner ad plugin.  CPM? CPC? CPX? CPR? Nope...  If you need to have a banner or banners displayed in multiple spots, this is it.  
 
 == Description ==
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
+I run ads for long periods of time so I don't care about accurate display statistics or anything of that nature.
+I needed to show banner ads on my site, but double click for publishers was messing up my template and other plugins were too heavy for what I needed.
+So, I made a super-basic banner plugin and named it after my favorite breakfast.
 
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
+Create a banner, paste the link it should point to, name the zone you want it in, and make a note of the advertiser.
+Then put the shortcode into your template or directly in a post.  
 
-A few notes about the sections above:
-
-*   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
-*   "Tags" is a comma separated list of tags that apply to the plugin
-*   "Requires at least" is the lowest version that the plugin will work on
-*   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
-higher versions... this is just the highest one you've verified.
-*   Stable tag should indicate the Subversion "tag" of the latest stable version, or "trunk," if you use `/trunk/` for
-stable.
-
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
-
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
+If you put multiple banners into one zone then 1 will randomly be selected when the page loads.
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
-
-e.g.
-
-1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+1. Install from repository
+2. Update your template `<?php do_shortcode('[adsbenedict zone=zonename]') ?>` (change the zone name to whatever ads you want displayed here)
+3. In posts/pages just use shortcode: `[adsbenedict zone=zonename]` (change the zone name to whatever ads you want displayed here)
+4. Go to the adsbenedict menu page and add some ads.  
 
 == Frequently Asked Questions ==
 
-= A question that someone might have =
+= Aren't there enough bad banner ad plugins? =
 
-An answer to that question.
+Yep.  And this one makes no claims to superiority other than that it is insanely simple and fixes some problems I was having with other ad plugins. 
 
-= What about foo bar? =
+= What about click tracking? weighting? alternate networks? =
 
-Answer to foo bar dilemma.
+If you use YOURLS link shortener you can have some rudimentary tracking.  Set your YOURLS address and secret token and a column will be added that keeps track of statistics.
+There is no protection against fraudulent clicks.
+I use this on ads that are sold and run for a period of time as opposed to ads that have a certain number of impressions or clicks associated with them.  
+
+= Will it ever... =
+
+The only "features" I *think* I'm going to add are a start date.
+Subject to change as I need to add features for myself.
+
+= Can I request a feature? =
+
+Of course.  If it's interesting or seems helpful to the rest of the world I might add it.  
+
+= Does it handle billing? =
+
+Nope.
+
+= If I put the same zone in my template twice could it possibly display the same ad twice? =
+
+Yes.
 
 == Screenshots ==
-
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
+1. If you choose to use an install of YOURLS as a means of keeping track of clicks, this the setup page.
+2. Ah...where the magic happens. This is a view of the live ads.  Editing/Adding is just like editing/adding a post in WordPress. Lovely.
+3. And...a shortcode.  If you were using ads within a post you'd do it this way.  Change the zone to whatever zone your ads are in.  Were you to want to use this inside a theme something like: <?php do_shortcode('[adsbenedict zone=zonename]'); ?> would be a better choice.
 
 == Changelog ==
 
-= 1.0 =
-* A change since the previous version.
-* Another change.
+= 0.3.0 =
+* Fixed a slow query related to the expiration post_meta.
 
-= 0.5 =
-* List versions from most recent at top to oldest at bottom.
+= 0.2.8 =
+* Increased quantity of ads to include in array.
 
-== Upgrade Notice ==
+= 0.2.7 =
+* Fixed formula for ad conversion calculations.  
 
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
+= 0.2.6 =
+* Forgot to make the ajax run for non-logged in users in previous release.
 
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
+= 0.2.5 =
+* Ads can be loaded via ajax which defeats full page caching.
 
-== Arbitrary section ==
+= 0.2.4 =
+* Speed and logic improvements in ad performance generation
 
-You may provide arbitrary sections, in the same format as the ones above.  This may be of use for extremely complicated
-plugins where more information needs to be conveyed that doesn't fit into the categories of "description" or
-"installation."  Arbitrary sections will be shown below the built-in sections outlined above.
+= 0.2.3 =
+* Fixed main shortcode return so PHP notice is not raised
 
-== A brief Markdown Example ==
+= 0.2.2 =
+* Fixed enqueued script with harcoded protocol 
+* Fixed error where YOURLS was passed an empty string
 
-Ordered list:
+= 0.2.1 =
+* Added short term caching to prevent slow loading due to long running query on sites with lots of posts
 
-1. Some feature
-1. Another feature
-1. Something else about the plugin
+= 0.2.0 =
+* Added expiration date.
+* For already existing ads, this will not impact display.
+* New ads will default to an expiration one year from date of creation.
+* Added column to show expiration date.
+* Use yourls API to display statistics.  
+* Check to see if yourls shortener is in use before adding display column of stats.
 
-Unordered list:
+= 0.1.3 =
+* Fixed YOURLS error is trying to use an already shortened link (please don't do that)
+* Styled a shortened link so it's responsive.  Hardcoded for now.
 
-* something
-* something else
-* third thing
+= 0.1.2 =
+* Added YOURLS integration
+* With YOURLS integration clicks and impressions are captures
 
-Here's a link to [WordPress](http://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-Titles are optional, naturally.
-
-[markdown syntax]: http://daringfireball.net/projects/markdown/syntax
-            "Markdown is what the parser uses to process much of the readme file"
-
-Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-`<?php code(); // goes in backticks ?>`
+= 0.1 
+* This is the version I'm using on my sites.  
+* Removed most (all?) self-deprecating comments.

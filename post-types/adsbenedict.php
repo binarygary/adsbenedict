@@ -4,9 +4,15 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 function adsbenedict_add_ad_url() {
 	add_meta_box(
-		'adsbenedict_ad_url',
+		'adsbenedict_url',
 		'URL',
 		'adsbenedict_ad_url_callback',
+		'adsbenedict'
+	);
+	add_meta_box(
+		'adsbenedict_expiration',
+		'Expire',
+		'adsbenedict_expiration_callback',
 		'adsbenedict'
 	);
 }
@@ -17,7 +23,45 @@ function adsbenedict_ad_url_callback( $post ) {
 	$url = get_post_meta( $post->ID, 'adsbenedict_url', true );
 	
 	echo '<label for="adsbenedict_url">URL: </label>';
-	echo '<input type="text" id="adsbenedict_url" name="adsbenedict_url" value="' . esc_attr( $url ) . '" size"25" />';
+	echo '<input type="text" id="adsbenedict_url" name="adsbenedict_url" value="' . esc_attr( $url ) . '" size="25" />';
+}
+
+function adsbenedict_expiration_callback( $post ) {
+	wp_nonce_field( 'adsbenedict_expiration_callback', 'adsbenedict_expiration_callback_nonce' );
+	$offset = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
+	$expiration = time()+YEAR_IN_SECONDS+$offset;
+	if ( !!get_post_meta( $post->ID, 'adsbenedict_expiration') ) {
+  	$expiration = get_post_meta( $post->ID, 'adsbenedict_expiration', true );
+	} 
+	$month=date('n', $expiration );
+	$year=date('Y',$expiration );
+	$day=date('j',$expiration );
+	$hour=date('G',$expiration );
+	$minute=date('i',$expiration );
+	$second=date('s', $expiration );
+	
+	echo '<label for="adsbenedict_expiration">Month: </label>';
+	echo '<select id="month" name="month">';
+	for ($i=1; $i<13; $i++) {
+			$numberMonth=$i;
+			if (strlen($numberMonth)<2) {
+				$numberMonth="0"."$numberMonth";
+			}
+			echo "<option value=$numberMonth ";
+			if ((int)$month === (int)$numberMonth) {
+				echo "selected";
+			}
+			echo ">$numberMonth</option>";
+		}
+	echo '</select>';
+	?>	
+		<label><span class="screen-reader-text">Day</span>
+		<input type="text" id="day" name="day" value="<?php echo $day; ?>" size="2" maxlength="2" autocomplete="off" /></label>, <label><span class="screen-reader-text">Year</span>
+		<input type="text" id="year" name="year" value="<?php echo $year; ?>" size="4" maxlength="4" autocomplete="off" /></label> @ <label><span class="screen-reader-text">Hour</span>
+		<input type="text" id="hour" name="hour" value="<?php echo $hour; ?>" size="2" maxlength="2" autocomplete="off" /></label>:<label><span class="screen-reader-text">Minute</span>
+		<input type="text" id="minute" name="minute" value="<?php echo $minute; ?>" size="2" maxlength="2" autocomplete="off" /></label>
+	<?php
+
 }
 
 function adsbenedict_save_ad_url( $post_id ) {
@@ -49,10 +93,24 @@ function adsbenedict_save_ad_url( $post_id ) {
 			return;
 		}
 		// Sanitize user input.
-		$my_data = sanitize_text_field( $_POST['adsbenedict_url'] );
 		
+		if ($_POST['day'] !='' ) {
+			$month=sanitize_text_field( $_POST['month'] );
+			$day=sanitize_text_field( $_POST['day'] );
+			$year=sanitize_text_field( $_POST['year'] );
+			$hour=sanitize_text_field( $_POST['hour'] );
+			$minute=sanitize_text_field( $_POST['minute'] );
+			$ab_expiration=strtotime("$month/$day/$year $hour:$minute");
+			update_post_meta( $post_id, 'adsbenedict_expiration', $ab_expiration);
+		}
+		
+		
+		$ab_url = sanitize_text_field( $_POST['adsbenedict_url'] );
+	
 		// Update the meta field in the database.
-		update_post_meta( $post_id, 'adsbenedict_url', $my_data );
+		update_post_meta( $post_id, 'adsbenedict_url', $ab_url );
+		
+	
 		
 		//change the title
 		remove_action( 'save_post', 'adsbenedict_save_ad_url', 1);
@@ -60,7 +118,6 @@ function adsbenedict_save_ad_url( $post_id ) {
 		if ( get_post_type($post_id)=='adsbenedict'){
 			$advertiser=wp_get_post_terms($post_id,'advertisers');
 			$zone=wp_get_post_terms($post_id,'zone');
-			var_dump($advertiser);
 			$advertiser=$advertiser[0]->name;
 			$zone=$zone[0]->name;
 			$title="$advertiser in $zone";
@@ -72,6 +129,9 @@ function adsbenedict_save_ad_url( $post_id ) {
 add_action( 'save_post' , 'adsbenedict_save_ad_url', 1);
 
 function adsbenedict_init() {
+	wp_enqueue_script( plugin_dir_path( __FILE__ ) . 'include/adsbenedict.js');
+	wp_enqueue_script('jquery-ui-datepicker');
+	wp_enqueue_style('jquery-style', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
 	register_post_type( 'adsbenedict', array(
 		'labels'            => array(
 			'name'                => __( 'Ads Benedict', 'adsbenedict' ),
@@ -129,22 +189,52 @@ function adsbenedict_updated_messages( $messages ) {
 add_filter( 'post_updated_messages', 'adsbenedict_updated_messages' );
 
 
-add_filter('manage_posts_columns', 'adsbenedict_show_thumb');
+add_filter('manage_adsbenedict_posts_columns', 'adsbenedict_show_thumb');
 function adsbenedict_show_thumb($columns) {
-    $columns['thumb'] = 'Thumb';
+    $columns['ab_thumb'] = 'Thumb';
+		$columns['ab_size'] = 'Ad Size';
+		$columns['ab_expiration'] = 'Expiration';
     return $columns;
 }
 
-add_image_size( 'admin-list-thumb', 160, 160, false );
 
 add_filter('manage_posts_custom_column', 'adsbenedict_show_thumb_display');
 function adsbenedict_show_thumb_display($name) {
+	add_image_size( 'ab_admin_thumb', 320, 320, false );
     global $post;
 	switch($name) {
-		case 'thumb':
+		case 'ab_thumb':
 			echo '<a href="' . get_edit_post_link() . '">';
-		    echo the_post_thumbnail( 'admin-list-thumb' );
+		    echo the_post_thumbnail( 'ab_admin_thumb' );
 		    echo '</a>';
 		    break;
+		case 'ab_size':
+			$tn_id = get_post_thumbnail_id( $post->ID );
+			$img = wp_get_attachment_image_src( $tn_id, 'full' );
+			$width = $img[1];
+			$height = $img[2];
+			echo "$width X $height";
+			break;
+		case 'ab_expiration':
+			if ( !!get_post_meta( $post->ID, 'adsbenedict_expiration') ) {
+  			$expiration = get_post_meta( $post->ID, 'adsbenedict_expiration', true );
+				if ($expiration<time()+get_option( 'gmt_offset' ) * HOUR_IN_SECONDS) {
+					echo "<font color=red><B>";
+				}
+				echo date('l jS \of F Y h:i A',$expiration);
+				if ($expiration<time()+get_option( 'gmt_offset' ) * HOUR_IN_SECONDS) {
+					echo "</B></font>";
+				}
+			} else {
+				echo "expiration not set yet";
+			}
+			
 	}
+}
+
+add_action('admin_head', 'ab_column_width');
+function ab_column_width() {
+    echo '<style type="text/css">';
+		echo '.column-ab_thumb {width:320px !important;}';
+    echo '</style>';
 }
